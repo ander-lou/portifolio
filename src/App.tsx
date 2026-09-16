@@ -1,284 +1,345 @@
 import {
   ArrowDown,
+  ArrowLeft,
   ArrowUpRight,
-  Award,
-  BriefcaseBusiness,
+  Check,
+  Download,
   ExternalLink,
-  GraduationCap,
   Linkedin,
+  Lock,
   Menu,
+  MessageCircle,
   X,
 } from 'lucide-react'
-import {
-  type ReactNode,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
+import { type FormEvent, type PointerEvent as ReactPointerEvent, useEffect, useRef, useState } from 'react'
 
-const BG_IMAGE_1 =
-  'https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260609_195923_b0ba8ace-1d1d-4f2c-9a28-1ab84b330680.png&w=1280&q=85'
+const base = import.meta.env.BASE_URL
+const whatsapp =
+  'https://wa.me/5585996584857?text=Ol%C3%A1%2C%20Anderson!%20Vi%20seu%20portf%C3%B3lio%20e%20gostaria%20de%20conversar.'
+const courseVideo = 'https://drive.google.com/file/d/1f-vY1wQSqUmM3U3NrX02XZO61YdH_Mup/view?usp=sharing'
+const coursePasswordHash = '8fe5e7c0fd4dcd9f53beef9d01650f87546d8e7a2faf79f1b167871802a6e14c'
 
-const BG_IMAGE_2 =
-  'https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260609_201152_bba90a12-bf12-459f-91f0-51f237dbaf3b.png&w=1280&q=85'
+type Project = {
+  slug: string
+  number: string
+  title: string
+  eyebrow: string
+  description: string
+  cover: string
+  color: string
+  ink: 'dark' | 'light'
+  tags: string[]
+}
 
-const PORTRAIT_IMAGE =
-  'https://framerusercontent.com/images/xT3Z1dkKHIP1hMdQ0I7lau96g.png'
-
-const projects = [
+const projects: Project[] = [
   {
+    slug: 'azo-sistemas',
     number: '01',
     title: 'Azo Sistemas',
+    eyebrow: 'Retail ERP · Web & mobile',
     description:
-      'A business management platform for general retail and the specialized fashion sector, designed to make daily operations clearer and more effective for small businesses.',
-    image:
-      'https://framerusercontent.com/images/Si2u9swrNHptF3AJ0kSBhVKtM.png',
-    tags: ['Information architecture', 'Research', 'UX/UI Design'],
-    href: 'https://www.behance.net/gallery/218491911/Azo-Sistemas-Web-App',
-    linkLabel: 'View case study',
+      'A research-led redesign that reorganized a complex retail management platform and translated it into a responsive product system.',
+    cover: `${base}images/azo-cover.webp`,
+    color: '#dff5f8',
+    ink: 'dark',
+    tags: ['Discovery', 'Information architecture', 'UX/UI Design'],
   },
   {
+    slug: 'ummo',
     number: '02',
-    title: 'UMMO App',
+    title: 'UMMO',
+    eyebrow: 'Edtech · Mobile product',
     description:
-      'A case study exploring how gamification can improve retention and completion rates across online learning experiences.',
-    image:
-      'https://framerusercontent.com/images/SUUCeezKM84koTda0V8OyehmSo.png',
-    tags: ['Research', 'UX/UI Design', 'Discovery'],
-    href: 'https://www.behance.net/gallery/195294943/UXUI-Estudo-de-caso-Ummo',
-    linkLabel: 'View case study',
+      'An online-learning experience shaped around study routines, visible progress and feedback that keeps learners engaged.',
+    cover: `${base}images/ummo-cover.webp`,
+    color: '#f8b5d8',
+    ink: 'dark',
+    tags: ['Research', 'Product strategy', 'Usability testing'],
   },
   {
+    slug: 'carteira-advisor',
     number: '03',
     title: 'Carteira Advisor',
+    eyebrow: 'Fintech · B2B platform',
     description:
-      'A B2B wealth-management product that helps investment firms and advisors give clients a clearer view of earnings, dividends and portfolio performance.',
-    image:
-      'https://framerusercontent.com/images/zgqBzcW2nLEnOfb7XWGBIkhvc.png',
-    tags: ['UX/UI Design', 'Rebranding', 'Landing page'],
-    href: 'https://www.carteiraadvisor.com/',
-    linkLabel: 'Product website',
+      'Rebranding and product interface standardization for an investment platform, connecting clearer journeys with more efficient implementation.',
+    cover: `${base}images/carteira-advisor.png`,
+    color: '#6b39e8',
+    ink: 'light',
+    tags: ['Product design', 'Rebranding', 'Design system'],
   },
-]
-
-const skills = [
-  'UX Design',
-  'UI Design',
-  'Product Design',
-  'Consulting',
-  'Design Systems',
-  'Front-End Development',
-  'Design Sprint',
-  'Interaction Design',
-  'User Testing',
-  'Usability Testing',
-  'UX Research',
-  'Leadership',
-  'Mentoring',
-  'No-Code',
 ]
 
 const experience = [
   {
-    role: 'Mid-Level Product Designer',
+    role: 'Senior UX/UI Designer',
+    company: 'Performa IT · Pague Menos account',
+    period: 'Feb 2026 — Present',
+    place: 'Fortaleza, Brazil',
+    description:
+      'Leading the evolution of the Pague Menos e-commerce experience: customer journeys, Home and PDP redesigns, usability testing, behavioral analytics and Design System evolution.',
+  },
+  {
+    role: 'Senior Product Designer',
+    company: 'Quattrus · Freelance',
+    period: 'Mar 2025 — Jun 2026',
+    place: 'Remote',
+    description:
+      'Designed end-to-end flows, wireframes and high-fidelity prototypes for ERP products, including a mobile experience redesign and metric-informed product decisions.',
+  },
+  {
+    role: 'Senior UX Designer',
     company: 'Labsit',
-    place: 'São Paulo, Brazil · Remote',
-    period: 'Apr 2023 — Present',
+    period: 'Apr 2023 — Jun 2025',
+    place: 'Remote',
     description:
-      'Designing and rebranding responsive web and mobile products for B2B and B2C clients. Working closely with front-end teams on flows, prototypes, features and component systems.',
+      'Worked across B2B and B2C products in investments, healthcare, workforce management, credit and marketplaces, from UX assessment to responsive delivery.',
   },
   {
-    role: 'Product Design Instructor',
+    role: 'UX/UI Design Instructor',
     company: 'Juventude Digital',
-    place: 'Fortaleza, Brazil · Remote',
-    period: 'Oct 2023 — Apr 2025',
+    period: 'Oct 2023 — Oct 2024',
+    place: 'Fortaleza, Brazil',
     description:
-      'Led courses and workshops in Figma, UX/UI design, prototyping and 3D no-code interfaces. Achieved a 92% NPS and the highest participation rate in the 2023 cycle.',
+      'Taught practical UX, UI and Figma courses. The final 2023 cycle reached 92% NPS, 84% participation and 58% completion.',
   },
   {
-    role: 'Mid-Level Product Designer',
-    company: 'Kiuin',
-    place: 'Fortaleza, Brazil · Remote',
+    role: 'UX/UI Designer',
+    company: 'Kand-ID',
     period: 'Nov 2022 — Mar 2024',
+    place: 'Remote',
     description:
-      'Partnered with ICC Biolabs to improve the patient journey through market research, product requirements, MVP definition and high-fidelity responsive prototypes.',
+      'Partnered with ICC Biolabs on healthcare journeys, market research, product requirements, MVP definition and responsive prototypes.',
   },
   {
-    role: 'Mid-Level Product Designer',
+    role: 'Junior UX Designer',
     company: 'Rodobank',
-    place: 'Fortaleza, Brazil · Hybrid',
     period: 'Jun 2022 — Mar 2023',
+    place: 'Fortaleza, Brazil',
     description:
-      'Created responsive product flows and interfaces while collaborating with engineering on new features and reusable components for web and mobile platforms.',
-  },
-  {
-    role: 'Product Design Researcher',
-    company: 'PIBI 2020 · CEMP',
-    place: 'Fortaleza, Brazil · Remote',
-    period: 'Feb 2020 — Jan 2021',
-    description:
-      'Early product-design research experience focused on understanding needs, structuring digital journeys and translating findings into usable interfaces.',
+      'Redesigned fintech experiences serving more than 80,000 users, connecting research, interface design, product metrics and engineering collaboration.',
   },
 ]
 
-const SPOTLIGHT_R = 260
+const skillGroups = [
+  {
+    title: 'Product thinking',
+    items: ['Discovery', 'User research', 'User flows', 'Design Thinking', 'Hypothesis validation'],
+  },
+  {
+    title: 'Craft & systems',
+    items: ['UI Design', 'Prototyping', 'Responsive design', 'Design Systems', 'Accessibility'],
+  },
+  {
+    title: 'Evidence & delivery',
+    items: ['Usability testing', 'Google Analytics', 'Hotjar', 'Microsoft Clarity', 'Maze'],
+  },
+  {
+    title: 'Tools & technology',
+    items: ['Figma', 'Framer', 'Spline', 'JavaScript', 'TypeScript', 'React Native'],
+  },
+]
 
-type CursorPosition = {
-  x: number
-  y: number
+type CaseData = {
+  project: Project
+  intro: string
+  meta: Array<[string, string]>
+  proof: Array<[string, string]>
+  sections: Array<{
+    eyebrow: string
+    title: string
+    paragraphs: string[]
+    bullets?: string[]
+    image?: string
+    imageAlt?: string
+  }>
+  sourceHref: string
+  sourceLabel: string
+  note?: string
 }
 
-type RevealLayerProps = {
-  image: string
-  cursorX: number
-  cursorY: number
-}
-
-type SectionRevealProps = {
-  children: ReactNode
-  className?: string
-}
-
-function SectionReveal({ children, className = '' }: SectionRevealProps) {
-  const elementRef = useRef<HTMLDivElement>(null)
-  const [visible, setVisible] = useState(false)
-
-  useEffect(() => {
-    const element = elementRef.current
-
-    if (!element) return
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true)
-          observer.disconnect()
-        }
+const cases: Record<string, CaseData> = {
+  'azo-sistemas': {
+    project: projects[0],
+    intro:
+      'Azo is a business-management product for general retail and fashion businesses. The redesign turned an expansive operational structure into a clearer, responsive web and mobile experience.',
+    meta: [
+      ['Role', 'UX/UI Design'],
+      ['Duration', '16 weeks'],
+      ['Platforms', 'Web and mobile'],
+      ['Tools', 'Figma, Optimal Workshop, Attention Insight'],
+    ],
+    proof: [
+      ['7', 'remote card-sorting sessions'],
+      ['10', 'tree-testing sessions'],
+      ['+9%', 'dashboard clarity in attention analysis'],
+      ['+9.8%', 'sales visibility in attention analysis'],
+    ],
+    sections: [
+      {
+        eyebrow: '01 · Map',
+        title: 'Make the complexity visible before redesigning it.',
+        paragraphs: [
+          'The work began by understanding the company, the audience and the existing product flow. Mapping the platform exposed structural issues before visual decisions entered the conversation.',
+          'Personas were built from business material to keep the redesign anchored in two retail realities: a generalist operation and a fashion-focused business.',
+        ],
+        bullets: [
+          'Mapped the current product and its operational dependencies',
+          'Created personas to frame needs and pain points',
+          'Connected new requirements to the existing platform structure',
+        ],
       },
-      { rootMargin: '0px 0px -10% 0px', threshold: 0.08 },
-    )
-
-    observer.observe(element)
-
-    return () => observer.disconnect()
-  }, [])
-
-  return (
-    <div
-      ref={elementRef}
-      className={`scroll-reveal ${visible ? 'is-visible' : ''} ${className}`}
-    >
-      {children}
-    </div>
-  )
+      {
+        eyebrow: '02 · Research',
+        title: 'Rebuild the information architecture with users.',
+        paragraphs: [
+          'A remote card sort tested 30 functional categories and surfaced more intuitive groupings. The first taxonomy was then evaluated through tree testing in two rounds, with five tasks per round.',
+          'The resulting architecture reduced ambiguity and organized seven main categories, creating a more stable foundation for future features.',
+        ],
+        image: `${base}images/azo-research.webp`,
+        imageAlt: 'Card sorting, tree testing and the revised Azo information architecture',
+      },
+      {
+        eyebrow: '03 · Design & validation',
+        title: 'A system that holds together from dashboard to mobile.',
+        paragraphs: [
+          'The interface was rebuilt from a shared style guide using Atomic Design principles. Components covered navigation, form controls, data tables, charts, feedback states and subscription moments.',
+          'Low-fidelity mobile screens helped translate desktop functionality before high-fidelity delivery. Attention analysis then guided iterations in dashboard hierarchy and key financial signals.',
+        ],
+        bullets: [
+          'Responsive web and mobile screen set',
+          'Reusable component language and spacing rules',
+          'Clearer visibility for results, sales and expenses',
+        ],
+        image: `${base}images/azo-results.webp`,
+        imageAlt: 'Azo dashboard, client list and subscription interface',
+      },
+    ],
+    sourceHref: 'https://www.behance.net/gallery/218491911/Azo-Sistemas-Web-App',
+    sourceLabel: 'View original Behance case',
+  },
+  ummo: {
+    project: projects[1],
+    intro:
+      'UMMO explores a practical question: how might a distance-learning product help students build a study routine, understand their progress and complete more of what they start?',
+    meta: [
+      ['Role', 'Research, flows, wireframes, UI and testing'],
+      ['Team', 'Lia Feijó + Anderson Loureiro'],
+      ['Duration', '16 weeks'],
+      ['Platform', 'Mobile'],
+    ],
+    proof: [
+      ['31', 'survey respondents'],
+      ['5', 'qualitative interviews'],
+      ['92.3%', 'reported difficulty balancing study and other activities'],
+      ['5', 'participants in usability testing'],
+    ],
+    sections: [
+      {
+        eyebrow: '01 · Understand',
+        title: 'Dropout was a routine problem, not a motivation slogan.',
+        paragraphs: [
+          'The research combined a 31-person survey with five interviews. Time management and inconsistent study routines emerged as the strongest barriers.',
+          'Students valued visible progress, practical reinforcement and short-term goals. They also needed feedback that explained mistakes instead of merely marking them wrong.',
+        ],
+        bullets: [
+          '42.8% rated their time-management skills poor or very poor',
+          '46.2% could not establish a study routine',
+          'A journey map connected planning, study, portfolio and job-search moments',
+        ],
+        image: `${base}images/ummo-research.webp`,
+        imageAlt: 'UMMO research findings, persona, journey map and prioritization matrix',
+      },
+      {
+        eyebrow: '02 · Decide',
+        title: 'Prioritize actions that make progress tangible.',
+        paragraphs: [
+          'An impact-versus-effort matrix focused the concept on a personalized study plan, progress feedback, reminders, practice reviews and a point system connected to useful rewards.',
+          'The information architecture connected course discovery, a routine questionnaire, study plan, lessons, feedback, challenges and the learner profile.',
+        ],
+      },
+      {
+        eyebrow: '03 · Test & refine',
+        title: 'Prototype early enough to change the structure.',
+        paragraphs: [
+          'Five people completed a medium-fidelity usability script. Half had trouble choosing times for multiple study days, leading to a redesigned schedule flow with an “apply to all days” option.',
+          'Half also wanted the overall course score visible from the beginning. The dashboard was adjusted to show total progress and the points available for exchange.',
+        ],
+        bullets: [
+          'Study-plan questionnaire and weekly schedule',
+          'Course progress, lesson review and explanatory feedback',
+          'Reminders, incentives and visible achievement loops',
+        ],
+        image: `${base}images/ummo-results.webp`,
+        imageAlt: 'Final UMMO mobile screens for study planning, lessons and progress',
+      },
+    ],
+    sourceHref: 'https://www.behance.net/gallery/195294943/UXUI-Estudo-de-caso-Ummo',
+    sourceLabel: 'View original Behance case',
+  },
+  'carteira-advisor': {
+    project: projects[2],
+    intro:
+      'A B2B investment platform for advisors, managers and family offices. My work at Labsit focused on rebranding, navigation flows and interface standardization across responsive experiences.',
+    meta: [
+      ['Role', 'Senior UX Designer'],
+      ['Context', 'Labsit client project'],
+      ['Platforms', 'Responsive web and mobile'],
+      ['Focus', 'Rebranding and product consistency'],
+    ],
+    proof: [
+      ['B2B', 'investment-management context'],
+      ['Web + mobile', 'responsive product surfaces'],
+      ['System', 'reusable patterns and components'],
+      ['Handoff', 'closer design and front-end alignment'],
+    ],
+    sections: [
+      {
+        eyebrow: '01 · Product context',
+        title: 'Dense financial information needs a calm hierarchy.',
+        paragraphs: [
+          'The public product consolidates investment portfolios and supports performance, allocation, reporting and client-management workflows. That breadth makes navigation clarity and visual consistency essential.',
+          'The design work evaluated product journeys across responsive web and mobile and translated the rebrand into reusable interface decisions.',
+        ],
+      },
+      {
+        eyebrow: '02 · Contribution',
+        title: 'Standardize the experience without flattening the product.',
+        paragraphs: [
+          'The contribution covered UX assessments, redesigned navigation flows, low- and high-fidelity prototypes and close collaboration with front-end teams on features and reusable components.',
+          'The resulting standardization strengthened visual consistency and made implementation more direct across a complex product ecosystem.',
+        ],
+        bullets: [
+          'Responsive flows for B2B investment journeys',
+          'Rebranding translated into product UI',
+          'Reusable components aligned with engineering',
+        ],
+      },
+      {
+        eyebrow: '03 · Next detail',
+        title: 'An initial case page, ready for deeper evidence.',
+        paragraphs: [
+          'This first version uses the verified scope from the resume and the current public product context. Research artifacts, before-and-after screens and private outcomes can be added as they become available.',
+        ],
+      },
+    ],
+    sourceHref: 'https://www.carteiraadvisor.com/',
+    sourceLabel: 'Visit product website',
+    note: 'Initial case framing based on the current resume and public product information.',
+  },
 }
 
-function RevealLayer({ image, cursorX, cursorY }: RevealLayerProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const revealRef = useRef<HTMLDivElement>(null)
-  const [, setCanvasVersion] = useState(0)
-
-  useEffect(() => {
-    const resizeCanvas = () => {
-      const canvas = canvasRef.current
-
-      if (!canvas) return
-
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
-      setCanvasVersion((version) => version + 1)
-    }
-
-    resizeCanvas()
-    window.addEventListener('resize', resizeCanvas)
-
-    return () => window.removeEventListener('resize', resizeCanvas)
-  }, [])
-
-  useEffect(() => {
-    const canvas = canvasRef.current
-    const reveal = revealRef.current
-
-    if (!canvas || !reveal) return
-
-    const context = canvas.getContext('2d')
-
-    if (!context) return
-
-    context.clearRect(0, 0, canvas.width, canvas.height)
-
-    const gradient = context.createRadialGradient(
-      cursorX,
-      cursorY,
-      0,
-      cursorX,
-      cursorY,
-      SPOTLIGHT_R,
-    )
-
-    gradient.addColorStop(0, 'rgba(255,255,255,1)')
-    gradient.addColorStop(0.4, 'rgba(255,255,255,1)')
-    gradient.addColorStop(0.6, 'rgba(255,255,255,0.75)')
-    gradient.addColorStop(0.75, 'rgba(255,255,255,0.4)')
-    gradient.addColorStop(0.88, 'rgba(255,255,255,0.12)')
-    gradient.addColorStop(1, 'rgba(255,255,255,0)')
-
-    context.fillStyle = gradient
-    context.beginPath()
-    context.arc(cursorX, cursorY, SPOTLIGHT_R, 0, Math.PI * 2)
-    context.fill()
-
-    const maskImage = `url(${canvas.toDataURL()})`
-    reveal.style.maskImage = maskImage
-    reveal.style.webkitMaskImage = maskImage
-  })
-
+function Brand({ dark = true }: { dark?: boolean }) {
   return (
-    <>
-      <canvas
-        ref={canvasRef}
-        className="pointer-events-none absolute inset-0"
-        style={{ display: 'none' }}
-        aria-hidden="true"
-      />
-      <div
-        ref={revealRef}
-        className="pointer-events-none absolute inset-0 z-30 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: `url("${image}")`,
-          maskSize: '100% 100%',
-          WebkitMaskSize: '100% 100%',
-          maskRepeat: 'no-repeat',
-          WebkitMaskRepeat: 'no-repeat',
-        }}
-        aria-hidden="true"
-      />
-    </>
-  )
-}
-
-function Logo() {
-  return (
-    <a href="#top" className="flex items-center gap-2" aria-label="Back to top">
-      <svg
-        width="26"
-        height="26"
-        viewBox="0 0 256 256"
-        fill="#ffffff"
-        aria-hidden="true"
-      >
-        <path d="M 256 256 L 128 256 L 0 128 L 128 128 Z M 256 128 L 128 128 L 0 0 L 128 0 Z" />
-      </svg>
-      <span className="font-playfair text-xl italic text-white sm:text-2xl">
-        Anderson
-      </span>
+    <a className={`brand ${dark ? 'brand--light' : ''}`} href={`${base}#top`} aria-label="Anderson Loureiro — home">
+      <span className="brand-mark">AL</span>
+      <span>Anderson Loureiro</span>
     </a>
   )
 }
 
 function Navigation() {
-  const [mobileOpen, setMobileOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
+  const [open, setOpen] = useState(false)
   const links = [
     ['About', '#about'],
     ['Work', '#work'],
@@ -286,617 +347,351 @@ function Navigation() {
     ['Journey', '#journey'],
   ]
 
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 40)
-
-    handleScroll()
-    window.addEventListener('scroll', handleScroll, { passive: true })
-
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
   return (
-    <>
-      <nav
-        className={`fixed left-0 right-0 top-0 z-[100] flex items-center justify-between border-b p-4 transition-all duration-500 sm:p-5 ${
-          scrolled
-            ? 'border-white/10 bg-black/75 backdrop-blur-xl'
-            : 'border-transparent bg-transparent'
-        }`}
-      >
-        <Logo />
-
-        <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 rounded-full border border-white/20 bg-black/30 px-2 py-2 shadow-2xl shadow-black/10 backdrop-blur-xl md:flex">
-          {links.map(([label, href], index) => (
-            <a
-              key={label}
-              href={href}
-              className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
-                index === 0
-                  ? 'bg-white text-gray-900'
-                  : 'text-white/80 hover:bg-white/15 hover:text-white'
-              }`}
-            >
-              {label}
-            </a>
-          ))}
-        </div>
-
-        <a
-          href="#contact"
-          className="hidden rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-gray-900 transition-all hover:scale-[1.02] hover:bg-[#f4eee5] md:block"
-        >
-          Let&apos;s talk
-        </a>
-
-        <button
-          type="button"
-          className="grid size-11 place-items-center rounded-full border border-white/30 bg-black/25 text-white backdrop-blur-xl md:hidden"
-          aria-label={mobileOpen ? 'Close navigation' : 'Open navigation'}
-          aria-expanded={mobileOpen}
-          onClick={() => setMobileOpen((open) => !open)}
-        >
-          {mobileOpen ? (
-            <X size={20} strokeWidth={1.8} />
-          ) : (
-            <Menu size={21} strokeWidth={1.8} />
-          )}
-        </button>
+    <header className="site-header">
+      <Brand />
+      <nav className="desktop-nav" aria-label="Primary navigation">
+        {links.map(([label, href]) => <a key={href} href={href}>{label}</a>)}
       </nav>
-
-      <div
-        className={`fixed inset-0 z-[90] flex flex-col justify-end bg-[#0a0a0a]/95 p-6 pb-10 backdrop-blur-2xl transition-all duration-500 md:hidden ${
-          mobileOpen
-            ? 'pointer-events-auto opacity-100'
-            : 'pointer-events-none opacity-0'
-        }`}
-      >
-        <div className="mb-auto mt-24 text-xs font-semibold uppercase tracking-[0.22em] text-white/40">
-          Navigation
-        </div>
+      <a className="header-contact" href={whatsapp} target="_blank" rel="noreferrer">
+        WhatsApp <ArrowUpRight size={15} />
+      </a>
+      <button className="menu-button" type="button" onClick={() => setOpen(!open)} aria-expanded={open} aria-label={open ? 'Close navigation' : 'Open navigation'}>
+        {open ? <X size={22} /> : <Menu size={22} />}
+      </button>
+      <div className={`mobile-nav ${open ? 'is-open' : ''}`}>
         {links.map(([label, href], index) => (
-          <a
-            key={label}
-            href={href}
-            onClick={() => setMobileOpen(false)}
-            className="flex items-end justify-between border-t border-white/15 py-4 text-4xl font-medium text-white"
-          >
-            <span>{label}</span>
-            <span className="mb-1 text-xs text-white/40">0{index + 1}</span>
-          </a>
+          <a key={href} href={href} onClick={() => setOpen(false)}><span>{label}</span><small>0{index + 1}</small></a>
         ))}
-        <a
-          href="#contact"
-          onClick={() => setMobileOpen(false)}
-          className="mt-8 flex items-center justify-between rounded-full bg-[#e8702a] px-6 py-4 font-semibold text-white"
-        >
-          Let&apos;s talk <ArrowUpRight size={18} />
-        </a>
+        <a className="mobile-whatsapp" href={whatsapp} target="_blank" rel="noreferrer">Start a conversation <MessageCircle size={19} /></a>
       </div>
-    </>
+    </header>
   )
 }
 
-function PortfolioHero() {
-  const mouse = useRef<CursorPosition>({ x: -999, y: -999 })
-  const smooth = useRef<CursorPosition>({ x: -999, y: -999 })
-  const rafRef = useRef<number>()
-  const [cursorPos, setCursorPos] = useState<CursorPosition>({
-    x: -999,
-    y: -999,
-  })
+function HomePage() {
+  const heroRef = useRef<HTMLElement>(null)
+  const courseDialogRef = useRef<HTMLDialogElement>(null)
+  const [coursePassword, setCoursePassword] = useState('')
+  const [courseError, setCourseError] = useState('')
 
   useEffect(() => {
-    const handleMouseMove = (event: MouseEvent) => {
-      mouse.current = { x: event.clientX, y: event.clientY }
-    }
-
-    const animate = () => {
-      smooth.current.x += (mouse.current.x - smooth.current.x) * 0.1
-      smooth.current.y += (mouse.current.y - smooth.current.y) * 0.1
-
-      setCursorPos({
-        x: smooth.current.x,
-        y: smooth.current.y,
-      })
-
-      rafRef.current = requestAnimationFrame(animate)
-    }
-
-    window.addEventListener('mousemove', handleMouseMove)
-    rafRef.current = requestAnimationFrame(animate)
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
-
-      if (rafRef.current !== undefined) {
-        cancelAnimationFrame(rafRef.current)
-      }
-    }
+    document.title = 'Anderson Loureiro — Senior Product Designer'
   }, [])
 
+  const handleHeroPointerMove = (event: ReactPointerEvent<HTMLElement>) => {
+    if (event.pointerType === 'touch' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    const hero = heroRef.current
+    if (!hero) return
+
+    const bounds = hero.getBoundingClientRect()
+    const x = (event.clientX - bounds.left) / bounds.width
+    const y = (event.clientY - bounds.top) / bounds.height
+    const offsetX = x - 0.5
+    const offsetY = y - 0.5
+
+    hero.style.setProperty('--tilt-x', `${(0.5 - y) * 5}deg`)
+    hero.style.setProperty('--tilt-y', `${offsetX * 6}deg`)
+    hero.style.setProperty('--shift-x', `${offsetX * 12}px`)
+    hero.style.setProperty('--shift-y', `${offsetY * 10}px`)
+    hero.style.setProperty('--orbit-x', `${(0.5 - x) * 18}px`)
+    hero.style.setProperty('--orbit-y', `${(0.5 - y) * 18}px`)
+    hero.style.setProperty('--universe-x', `${offsetX * -32}px`)
+    hero.style.setProperty('--universe-y', `${offsetY * -22}px`)
+    hero.style.setProperty('--universe-rotate', `${offsetX * 3.2}deg`)
+    hero.style.setProperty('--plane-x', `${offsetX * 24}px`)
+    hero.style.setProperty('--plane-y', `${offsetY * 16}px`)
+    hero.style.setProperty('--route-x', `${offsetX * 18}px`)
+    hero.style.setProperty('--route-y', `${offsetY * 12}px`)
+  }
+
+  const resetHeroInteraction = () => {
+    const hero = heroRef.current
+    if (!hero) return
+
+    for (const property of ['--tilt-x', '--tilt-y', '--shift-x', '--shift-y', '--orbit-x', '--orbit-y', '--universe-x', '--universe-y', '--universe-rotate', '--plane-x', '--plane-y', '--route-x', '--route-y']) {
+      hero.style.removeProperty(property)
+    }
+  }
+
+  const openCourseAccess = () => {
+    setCoursePassword('')
+    setCourseError('')
+    courseDialogRef.current?.showModal()
+  }
+
+  const closeCourseAccess = () => {
+    courseDialogRef.current?.close()
+  }
+
+  const handleCourseAccess = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    const bytes = new TextEncoder().encode(coursePassword)
+    const digest = await crypto.subtle.digest('SHA-256', bytes)
+    const hash = Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('')
+
+    if (hash !== coursePasswordHash) {
+      setCourseError('Incorrect password. Check it and try again.')
+      return
+    }
+
+    setCourseError('')
+    courseDialogRef.current?.close()
+    window.location.assign(courseVideo)
+  }
+
   return (
-    <section
-      id="top"
-      className="relative h-screen w-full overflow-hidden bg-black"
-      style={{ height: '100dvh' }}
-    >
-      <div
-        className="hero-zoom absolute inset-0 z-10 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url("${BG_IMAGE_1}")` }}
-        aria-hidden="true"
-      />
-
-      <RevealLayer
-        image={BG_IMAGE_2}
-        cursorX={cursorPos.x}
-        cursorY={cursorPos.y}
-      />
-
-      <div className="pointer-events-none absolute left-0 right-0 top-[14%] z-50 flex flex-col items-center px-5 text-center">
-        <p
-          className="hero-anim hero-fade mb-5 text-[10px] font-semibold uppercase tracking-[0.28em] text-white/60 sm:text-xs"
-          style={{ animationDelay: '0.15s' }}
-        >
-          Product Designer · Fortaleza, Brazil
-        </p>
-        <h1 className="leading-[0.91] text-white">
-          <span
-            className="hero-anim hero-reveal font-playfair block text-5xl font-normal italic sm:text-7xl md:text-8xl lg:text-[7rem]"
-            style={{
-              letterSpacing: '-0.05em',
-              animationDelay: '0.25s',
-            }}
-          >
-            Anderson Loureiro
-          </span>
-          <span
-            className="hero-anim hero-reveal -mt-1 block text-5xl font-normal sm:text-7xl md:text-8xl lg:text-[7rem]"
-            style={{
-              letterSpacing: '-0.08em',
-              animationDelay: '0.42s',
-            }}
-          >
-            Product Designer
-          </span>
-        </h1>
-      </div>
-
-      <div
-        className="hero-anim hero-fade absolute bottom-14 left-10 z-50 hidden max-w-[280px] sm:block md:left-14"
-        style={{ animationDelay: '0.7s' }}
-      >
-        <p className="text-sm leading-relaxed text-white/75">
-          Five years shaping digital products through research, systems
-          thinking and expressive, implementable interfaces.
-        </p>
-      </div>
-
-      <div
-        className="hero-anim hero-fade absolute bottom-8 left-5 right-5 z-50 flex max-w-full flex-col items-start gap-4 sm:bottom-16 sm:left-auto sm:right-10 sm:max-w-[285px] sm:gap-5 md:right-14"
-        style={{ animationDelay: '0.85s' }}
-      >
-        <p className="text-xs leading-relaxed text-white/75 sm:text-sm">
-          I create user-centered experiences for innovative products, bringing
-          clarity to complex journeys through design thinking.
-        </p>
-        <a
-          href="#work"
-          className="group flex items-center gap-3 rounded-full bg-[#e8702a] px-7 py-3 text-sm font-medium text-white transition-all hover:scale-[1.03] hover:bg-[#d2611f] hover:shadow-lg hover:shadow-[#e8702a]/30 active:scale-95"
-        >
-          Explore selected work
-          <ArrowDown
-            size={16}
-            className="transition-transform group-hover:translate-y-0.5"
-          />
-        </a>
-      </div>
-    </section>
-  )
-}
-
-function AboutSection() {
-  return (
-    <section
-      id="about"
-      className="relative overflow-hidden bg-[#eeeae2] px-5 py-24 text-[#111] sm:px-10 sm:py-32 md:px-14"
-    >
-      <div className="contour-lines absolute inset-0 opacity-30" />
-      <div className="relative mx-auto max-w-[1500px]">
-        <SectionReveal className="grid gap-12 lg:grid-cols-[0.78fr_1.22fr] lg:gap-20">
-          <div>
-            <p className="section-label text-black/50">01 · About</p>
-            <div className="mt-8 overflow-hidden rounded-[2rem] bg-black">
-              <img
-                src={PORTRAIT_IMAGE}
-                alt="Anderson Loureiro, Product Designer"
-                className="aspect-[4/3] h-full w-full object-cover object-center opacity-90 grayscale-[15%] transition duration-700 hover:scale-[1.025] hover:grayscale-0"
-              />
-            </div>
-            <div className="mt-5 flex items-center justify-between border-t border-black/20 pt-4 text-xs font-medium uppercase tracking-[0.15em] text-black/55">
-              <span>Fortaleza · Brazil</span>
-              <span>Available remotely</span>
-            </div>
-          </div>
-
-          <div className="flex flex-col justify-between">
-            <h2 className="max-w-4xl text-[clamp(2.8rem,6vw,6.7rem)] font-medium leading-[0.94] tracking-[-0.065em]">
-              Complex products become{' '}
-              <span className="font-playfair font-normal italic text-[#c65520]">
-                clear experiences
-              </span>{' '}
-              when every layer has purpose.
-            </h2>
-
-            <div className="mt-14 grid gap-8 border-t border-black/20 pt-8 sm:grid-cols-2">
-              <p className="max-w-md text-base leading-relaxed text-black/65">
-                I&apos;m a Product Designer focused on creating distinctive,
-                disruptive and modern digital products that are both pleasing
-                to use and realistic to implement.
-              </p>
-              <p className="max-w-md text-base leading-relaxed text-black/65">
-                Currently at Labsit and pursuing a postgraduate degree in User
-                Experience and Human-Computer Interaction at PUC-Rio.
-              </p>
-            </div>
-          </div>
-        </SectionReveal>
-
-        <SectionReveal className="mt-20 grid grid-cols-2 border-y border-black/20 md:grid-cols-4">
-          {[
-            ['5+', 'Years of experience'],
-            ['03', 'Featured case studies'],
-            ['92%', 'Course NPS'],
-            ['02', 'Markets · national & global'],
-          ].map(([value, label], index) => (
-            <div
-              key={label}
-              className={`py-8 md:py-10 ${
-                index % 2 ? 'border-l border-black/20 pl-5 sm:pl-8' : ''
-              } ${index > 1 ? 'border-t border-black/20 md:border-t-0' : ''} ${
-                index === 2 ? 'md:border-l md:pl-8' : ''
-              }`}
-            >
-              <div className="font-playfair text-4xl italic sm:text-5xl">
-                {value}
-              </div>
-              <div className="mt-2 max-w-[150px] text-xs font-medium uppercase leading-relaxed tracking-[0.12em] text-black/50">
-                {label}
-              </div>
-            </div>
-          ))}
-        </SectionReveal>
-      </div>
-    </section>
-  )
-}
-
-function WorkSection() {
-  return (
-    <section
-      id="work"
-      className="relative overflow-hidden bg-[#090909] px-5 py-24 text-white sm:px-10 sm:py-32 md:px-14"
-    >
-      <div className="orange-glow absolute -right-40 top-0 h-[600px] w-[600px]" />
-      <div className="relative mx-auto max-w-[1500px]">
-        <SectionReveal className="mb-16 flex flex-col justify-between gap-8 border-b border-white/15 pb-10 md:flex-row md:items-end">
-          <div>
-            <p className="section-label text-white/40">02 · Selected work</p>
-            <h2 className="mt-6 text-5xl font-medium leading-none tracking-[-0.06em] sm:text-7xl md:text-8xl">
-              Built from
-              <br />
-              <span className="font-playfair font-normal italic text-[#e8702a]">
-                insight to interface.
-              </span>
-            </h2>
-          </div>
-          <p className="max-w-sm text-sm leading-relaxed text-white/55">
-            Product strategy, research and interface design for retail,
-            education and financial technology.
-          </p>
-        </SectionReveal>
-
-        <div className="space-y-8">
-          {projects.map((project, index) => (
-            <SectionReveal key={project.title}>
-              <article className="group grid overflow-hidden rounded-[2rem] border border-white/10 bg-[#111] lg:grid-cols-[1.15fr_0.85fr]">
-                <a
-                  href={project.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={`relative flex min-h-[330px] items-center justify-center overflow-hidden bg-[#181818] p-7 sm:min-h-[460px] sm:p-12 ${
-                    index % 2 ? 'lg:order-2' : ''
-                  }`}
-                  aria-label={`${project.linkLabel}: ${project.title}`}
-                >
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(232,112,42,0.18),transparent_60%)] opacity-0 transition-opacity duration-700 group-hover:opacity-100" />
-                  <img
-                    src={project.image}
-                    alt={`${project.title} product preview`}
-                    loading="lazy"
-                    className="relative z-10 max-h-[390px] w-full object-contain drop-shadow-2xl transition duration-700 ease-out group-hover:scale-[1.04]"
-                  />
-                  <div className="absolute right-5 top-5 grid size-12 place-items-center rounded-full bg-white text-black opacity-0 transition-all duration-300 group-hover:rotate-6 group-hover:opacity-100">
-                    <ArrowUpRight size={19} />
-                  </div>
-                </a>
-
-                <div
-                  className={`flex min-h-[390px] flex-col justify-between p-7 sm:p-10 lg:p-14 ${
-                    index % 2 ? 'lg:order-1' : ''
-                  }`}
-                >
-                  <div>
-                    <div className="mb-14 flex items-center justify-between text-xs font-semibold uppercase tracking-[0.16em] text-white/35">
-                      <span>Case study</span>
-                      <span>{project.number}</span>
-                    </div>
-                    <h3 className="text-4xl font-medium tracking-[-0.05em] sm:text-5xl">
-                      {project.title}
-                    </h3>
-                    <p className="mt-6 max-w-lg text-sm leading-relaxed text-white/55 sm:text-base">
-                      {project.description}
-                    </p>
-                  </div>
-
-                  <div className="mt-12">
-                    <div className="mb-7 flex flex-wrap gap-2">
-                      {project.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="rounded-full border border-white/15 px-3.5 py-2 text-xs text-white/60"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    <a
-                      href={project.href}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-2 text-sm font-semibold text-[#f08a4e] transition-colors hover:text-white"
-                    >
-                      {project.linkLabel} <ArrowUpRight size={16} />
-                    </a>
-                  </div>
-                </div>
-              </article>
-            </SectionReveal>
-          ))}
+    <main id="top">
+      <Navigation />
+      <section ref={heroRef} className="hero" onPointerMove={handleHeroPointerMove} onPointerLeave={resetHeroInteraction}>
+        <div className="hero-universe" aria-hidden="true">
+          <div className="universe-horizon universe-horizon--outer" />
+          <div className="universe-horizon universe-horizon--inner" />
+          <div className="universe-eclipse"><div /></div>
+          <svg className="universe-routes" viewBox="0 0 1600 900" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="route-glow" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stopColor="#ff9b69" stopOpacity="0" />
+                <stop offset="0.48" stopColor="#ff9b69" stopOpacity="0.72" />
+                <stop offset="1" stopColor="#ff745d" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+            <path d="M-140 718C211 370 496 822 824 500C1115 214 1362 118 1740 326" />
+            <path d="M198-110C536 203 483 515 822 687C1149 852 1397 753 1702 472" />
+          </svg>
+          <div className="universe-plane" />
+          <div className="universe-map-label universe-map-label--one"><span>Sector 01</span>Commerce</div>
+          <div className="universe-map-label universe-map-label--two"><span>Sector 02</span>ERP systems</div>
+          <div className="universe-map-label universe-map-label--three"><span>Sector 03</span>Fintech · Health · Education</div>
+          <div className="universe-axis"><span>Explored product universes</span></div>
         </div>
-      </div>
-    </section>
-  )
-}
-
-function ExpertiseSection() {
-  return (
-    <section
-      id="expertise"
-      className="bg-[#eeeae2] px-5 py-24 text-[#111] sm:px-10 sm:py-32 md:px-14"
-    >
-      <div className="mx-auto max-w-[1500px]">
-        <SectionReveal className="grid gap-12 lg:grid-cols-[0.7fr_1.3fr] lg:gap-24">
-          <div>
-            <p className="section-label text-black/50">03 · Expertise</p>
-            <h2 className="mt-7 text-5xl font-medium leading-[0.94] tracking-[-0.06em] sm:text-7xl">
-              A broad
-              <br />
-              <span className="font-playfair font-normal italic text-[#c65520]">
-                design toolkit.
-              </span>
-            </h2>
-            <p className="mt-8 max-w-sm text-sm leading-relaxed text-black/55">
-              From discovery to delivery, I move between strategy, interaction
-              and visual systems to make products coherent end to end.
-            </p>
+        <div className="hero-grain" aria-hidden="true" />
+        <div className="hero-copy">
+          <p className="kicker">Senior UX/UI & Product Designer · Fortaleza, Brazil</p>
+          <h1>Turning complex products into <em>clear decisions.</em></h1>
+          <p className="hero-summary">Six years designing e-commerce, ERP, fintech and healthcare products — from research and systems thinking to interfaces that engineering can ship.</p>
+          <div className="hero-actions">
+            <a className="button button--accent" href="#work">Explore selected work <ArrowDown size={17} /></a>
+            <a className="text-link text-link--light" href={`${base}Resume-Anderson-Loureiro-2026.pdf`} target="_blank" rel="noreferrer">Resume <Download size={16} /></a>
           </div>
-
-          <div className="flex flex-wrap content-start gap-3">
-            {skills.map((skill, index) => (
-              <div
-                key={skill}
-                className={`skill-pill rounded-full border border-black/20 px-5 py-3 text-base font-medium transition-all duration-300 hover:-translate-y-1 hover:border-[#c65520] hover:bg-[#c65520] hover:text-white sm:px-7 sm:py-4 sm:text-xl ${
-                  index === 2 || index === 4 || index === 10
-                    ? 'font-playfair italic'
-                    : ''
-                }`}
-              >
-                {skill}
+        </div>
+        <div className="hero-portrait-wrap">
+          <div className="portrait-orbit portrait-orbit--one" aria-hidden="true" />
+          <div className="portrait-orbit portrait-orbit--two" aria-hidden="true" />
+          <div className="portrait-stage">
+            <figure className="hero-portrait">
+              <img src={`${base}images/anderson-profile.webp`} alt="3D portrait of Anderson Loureiro with round glasses and a beard" width="872" height="872" />
+              <figcaption><span>Currently</span><strong>Performa IT · Pague Menos</strong></figcaption>
+            </figure>
+            <div className="portrait-facts" aria-hidden="true">
+              <div className="portrait-fact-orbit">
+                <div className="portrait-fact"><span><strong>120+</strong> students</span></div>
+                <div className="portrait-fact"><span>English-speaking teams</span></div>
+                <div className="portrait-fact"><span>Portugal · Switzerland</span></div>
+                <div className="portrait-fact"><span>Hackathon winner</span></div>
+                <div className="portrait-fact"><span>UX · Product · Code</span></div>
+                <div className="portrait-fact"><span>ICC-incubated startup</span></div>
               </div>
+            </div>
+          </div>
+          <div className="hero-interaction-hint" aria-hidden="true"><span /> Move to navigate · Hover portrait</div>
+        </div>
+        <div className="hero-index" aria-hidden="true">01 — 26</div>
+      </section>
+
+      <section className="about section-light" id="about">
+        <div className="section-shell about-grid">
+          <div>
+            <p className="section-kicker">01 · About</p>
+            <h2 className="section-heading">Evidence first.<br /><em>Clarity always.</em></h2>
+          </div>
+          <div className="about-copy">
+            <p className="lead-copy">I’m Anderson, a Senior UX/UI and Product Designer who moves comfortably between discovery, interaction design, visual systems and product delivery.</p>
+            <div className="about-columns">
+              <p>Today I evolve the Pague Menos e-commerce experience, using behavioral data, usability testing and cross-functional collaboration to improve discovery, conversion and content exploration.</p>
+              <p>My engineering background helps me make complex rules legible and collaborate across disciplines. I have delivered products with fully English-speaking teams and for clients in Portugal and Switzerland.</p>
+            </div>
+            <div className="credibility-list">
+              <div><span>01</span><p><strong>International delivery</strong>Projects with fully English-speaking teams, including work for Portugal and Switzerland.</p></div>
+              <div><span>02</span><p><strong>Design education</strong>A recorded UX/UI course and more than 120 students trained through Juventude Digital.</p></div>
+              <div><span>03</span><p><strong>Entrepreneurship</strong>A healthcare startup incubated by Instituto do Câncer do Ceará.</p></div>
+              <div><span>04</span><p><strong>Recognition</strong>First place in a healthcare hackathon while leading the UX practice.</p></div>
+            </div>
+            <div className="about-actions">
+              <a className="button button--dark" href={whatsapp} target="_blank" rel="noreferrer">Talk on WhatsApp <MessageCircle size={18} /></a>
+              <a className="text-link" href={`${base}Resume-Anderson-Loureiro-2026.pdf`} target="_blank" rel="noreferrer">Resume <ArrowUpRight size={16} /></a>
+            </div>
+          </div>
+        </div>
+        <div className="section-shell stats-row">
+          <div><strong>6+</strong><span>Years designing digital products</span></div>
+          <div><strong>80k+</strong><span>Users on a redesigned fintech platform</span></div>
+          <div><strong>120+</strong><span>Students trained in UX/UI Design</span></div>
+          <div><strong>01</strong><span>Hackathon first place in healthcare</span></div>
+        </div>
+      </section>
+
+      <section className="work section-dark" id="work">
+        <div className="section-shell">
+          <div className="section-intro">
+            <div>
+              <p className="section-kicker section-kicker--light">02 · Selected work</p>
+              <h2 className="section-heading section-heading--light">From messy systems<br />to <em>usable products.</em></h2>
+            </div>
+            <p>Three in-depth case studies, followed by live client, personal and education projects.</p>
+          </div>
+          <div className="project-list">
+            {projects.map((project) => (
+              <article className={`project-card project-card--${project.ink}`} key={project.slug} style={{ backgroundColor: project.color }}>
+                <div className="project-content">
+                  <div className="project-topline"><span>{project.number}</span><span>{project.eyebrow}</span></div>
+                  <h3>{project.title}</h3>
+                  <p>{project.description}</p>
+                  <div className="tag-row">{project.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
+                  <a className="project-link" href={`${base}?project=${project.slug}`}>Open case study <ArrowUpRight size={18} /></a>
+                </div>
+                <a className="project-media" href={`${base}?project=${project.slug}`} aria-label={`Open ${project.title} case study`}>
+                  <img src={project.cover} alt={`${project.title} case-study preview`} loading="lazy" />
+                </a>
+              </article>
             ))}
           </div>
-        </SectionReveal>
-
-        <SectionReveal className="mt-24 grid overflow-hidden rounded-[2rem] bg-[#e8702a] text-black md:grid-cols-[1fr_1.2fr]">
-          <div className="flex min-h-[320px] flex-col justify-between p-8 sm:p-12">
-            <Award size={34} strokeWidth={1.4} />
-            <div>
-              <div className="font-playfair text-7xl italic sm:text-8xl">92%</div>
-              <p className="mt-3 max-w-xs text-sm font-medium leading-relaxed">
-                NPS in the excellence zone for the Introduction to UI Design
-                with Figma course.
-              </p>
+          <div className="live-work" id="live-work">
+            <div className="live-work-heading">
+              <p className="section-kicker section-kicker--light">Live work · Built beyond the case studies</p>
+              <p>Products and learning experiences currently available to explore.</p>
             </div>
-          </div>
-          <div className="grid border-t border-black/20 sm:grid-cols-2 md:border-l md:border-t-0">
-            <div className="flex min-h-[220px] flex-col justify-end p-8 sm:p-10">
-              <div className="font-playfair text-6xl italic">84%</div>
-              <p className="mt-3 text-sm leading-relaxed text-black/65">
-                Highest participation rate in the final 2023 course cycle.
-              </p>
-            </div>
-            <div className="flex min-h-[220px] flex-col justify-end border-t border-black/20 p-8 sm:border-l sm:border-t-0 sm:p-10">
-              <div className="font-playfair text-6xl italic">58%</div>
-              <p className="mt-3 text-sm leading-relaxed text-black/65">
-                Highest completion rate in the same learning cycle.
-              </p>
-            </div>
-          </div>
-        </SectionReveal>
-      </div>
-    </section>
-  )
-}
-
-function JourneySection() {
-  return (
-    <section
-      id="journey"
-      className="bg-[#0a0a0a] px-5 py-24 text-white sm:px-10 sm:py-32 md:px-14"
-    >
-      <div className="mx-auto grid max-w-[1500px] gap-16 lg:grid-cols-[0.72fr_1.28fr] lg:gap-24">
-        <SectionReveal className="lg:sticky lg:top-28 lg:self-start">
-          <p className="section-label text-white/40">04 · Journey</p>
-          <h2 className="mt-7 text-5xl font-medium leading-[0.94] tracking-[-0.06em] sm:text-7xl">
-            Experience,
-            <br />
-            <span className="font-playfair font-normal italic text-[#e8702a]">
-              layer by layer.
-            </span>
-          </h2>
-          <p className="mt-8 max-w-sm text-sm leading-relaxed text-white/50">
-            A trajectory across product teams, education, healthcare,
-            financial services and applied design research.
-          </p>
-        </SectionReveal>
-
-        <div>
-          {experience.map((item, index) => (
-            <SectionReveal key={`${item.company}-${item.period}`}>
-              <article className="grid gap-6 border-t border-white/15 py-9 sm:grid-cols-[90px_1fr] sm:py-11">
-                <div className="text-xs font-semibold tracking-[0.18em] text-white/30">
-                  0{index + 1}
+            <div className="live-work-grid">
+              <article className="live-project live-project--quattrus">
+                <div className="live-project-copy">
+                  <span>Client project · Product design</span>
+                  <h3>Quattrus</h3>
+                  <p>Product work for a management platform that connects strategy, KPIs, OKRs and action plans in one operational ecosystem.</p>
+                  <a href="https://www.quattrus.com/" target="_blank" rel="noreferrer">Visit live site <ArrowUpRight size={17} /></a>
                 </div>
-                <div>
-                  <div className="flex flex-col justify-between gap-3 md:flex-row md:items-start">
-                    <div>
-                      <h3 className="text-2xl font-medium tracking-[-0.03em] sm:text-3xl">
-                        {item.role}
-                      </h3>
-                      <p className="mt-1 font-playfair text-xl italic text-[#ef884c]">
-                        {item.company}
-                      </p>
-                    </div>
-                    <div className="text-left text-xs leading-relaxed text-white/40 md:text-right">
-                      <div>{item.period}</div>
-                      <div>{item.place}</div>
-                    </div>
-                  </div>
-                  <p className="mt-6 max-w-2xl text-sm leading-relaxed text-white/50 sm:text-base">
-                    {item.description}
-                  </p>
+                <div className="quattrus-visual" aria-hidden="true">
+                  <div><span>Strategy</span><i /></div>
+                  <div><span>Indicators</span><i /></div>
+                  <div><span>Action plans</span><i /></div>
+                  <strong>Q</strong>
                 </div>
               </article>
-            </SectionReveal>
-          ))}
+
+              <article className="live-project live-project--al3d">
+                <div className="live-project-copy">
+                  <span>Personal project · Product & development</span>
+                  <h3>AL3D</h3>
+                  <p>A fast 3D-print pricing tool that turns material, energy, time and margin into clear quotes—with a useful guest mode.</p>
+                  <a href="https://al3d-sigma.vercel.app/" target="_blank" rel="noreferrer">Open product <ArrowUpRight size={17} /></a>
+                </div>
+                <div className="al3d-visual" aria-hidden="true">
+                  <span>AL3D // QUICK</span>
+                  <strong>Cost signal</strong>
+                  <div><i />Material</div><div><i />Energy</div><div><i />Margin</div>
+                </div>
+              </article>
+
+              <article className="live-project live-project--course">
+                <img src={`${base}images/anderson-course-cover.jpg`} alt="Anderson Loureiro UX/UI Design recorded course cover" loading="lazy" width="1600" height="900" />
+                <div className="course-overlay">
+                  <span>Recorded course · UX/UI Design</span>
+                  <h3>From practice<br />to the classroom.</h3>
+                  <p>A complete recorded class created for designer and creator <a href="https://www.instagram.com/alanavetroni/" target="_blank" rel="noreferrer">Alana Vetroni</a>.</p>
+                  <button type="button" onClick={openCourseAccess}><Lock size={16} /> Watch protected video</button>
+                </div>
+              </article>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div className="mx-auto mt-20 max-w-[1500px] border-t border-white/15 pt-16">
-        <SectionReveal className="grid gap-8 md:grid-cols-2">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.035] p-8 sm:p-10">
-            <GraduationCap
-              size={31}
-              strokeWidth={1.4}
-              className="text-[#e8702a]"
-            />
-            <p className="mt-16 text-xs font-semibold uppercase tracking-[0.18em] text-white/35">
-              Postgraduate degree · In progress
-            </p>
-            <h3 className="mt-4 max-w-lg text-3xl font-medium tracking-[-0.04em]">
-              UX, User Experience & Human-Computer Interaction
-            </h3>
-            <p className="mt-3 font-playfair text-xl italic text-white/55">
-              PUC-Rio
-            </p>
+      <section className="expertise section-light" id="expertise">
+        <div className="section-shell">
+          <div className="section-intro section-intro--ink">
+            <div>
+              <p className="section-kicker">03 · Expertise</p>
+              <h2 className="section-heading">Strategy, craft<br />and <em>evidence.</em></h2>
+            </div>
+            <p>One connected practice from framing the right problem to delivering a system that can evolve.</p>
           </div>
+          <div className="skill-grid">
+            {skillGroups.map((group, index) => (
+              <article key={group.title}>
+                <span>0{index + 1}</span><h3>{group.title}</h3>
+                <ul>{group.items.map((item) => <li key={item}><Check size={15} />{item}</li>)}</ul>
+              </article>
+            ))}
+          </div>
+          <div className="teaching-banner">
+            <div><p className="section-kicker">Teaching is part of the practice</p><h3>Good design becomes stronger when it can be explained.</h3></div>
+            <div className="teaching-metrics">
+              <div><strong>92%</strong><span>NPS</span></div><div><strong>84%</strong><span>Participation</span></div><div><strong>58%</strong><span>Completion</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.035] p-8 sm:p-10">
-            <BriefcaseBusiness
-              size={31}
-              strokeWidth={1.4}
-              className="text-[#e8702a]"
-            />
-            <p className="mt-16 text-xs font-semibold uppercase tracking-[0.18em] text-white/35">
-              Higher education · 2017—2022
-            </p>
-            <h3 className="mt-4 max-w-lg text-3xl font-medium tracking-[-0.04em]">
-              Design foundation and interdisciplinary practice
-            </h3>
-            <p className="mt-3 font-playfair text-xl italic text-white/55">
-              Federal University of Ceará
-            </p>
+      <section className="journey section-dark" id="journey">
+        <div className="section-shell journey-grid">
+          <div className="journey-heading">
+            <p className="section-kicker section-kicker--light">04 · Journey</p>
+            <h2 className="section-heading section-heading--light">Built across<br /><em>real contexts.</em></h2>
+            <p>E-commerce, ERP, investments, healthcare, education and applied research.</p>
           </div>
-        </SectionReveal>
-      </div>
-    </section>
+          <div className="timeline">
+            {experience.map((item, index) => (
+              <article key={`${item.company}-${item.period}`}>
+                <span className="timeline-index">0{index + 1}</span>
+                <div>
+                  <div className="timeline-title"><h3>{item.role}</h3><p>{item.period}</p></div>
+                  <h4>{item.company}</h4><p className="timeline-place">{item.place}</p><p className="timeline-description">{item.description}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+        <div className="section-shell education-row">
+          <article><span>Postgraduate program</span><h3>User Experience & Human-Computer Interaction</h3><p>PUC-Rio · Nov 2022 · GPA 9.5533</p></article>
+          <article><span>Bachelor’s degree</span><h3>Mechanical Engineering</h3><p>Federal University of Ceará · Jul 2022</p></article>
+        </div>
+      </section>
+
+      <ContactFooter />
+      <dialog ref={courseDialogRef} className="course-dialog" aria-labelledby="course-dialog-title" onClick={(event) => event.target === event.currentTarget && closeCourseAccess()} onClose={() => { setCoursePassword(''); setCourseError('') }}>
+        <div className="course-dialog-panel">
+          <button className="course-dialog-close" type="button" onClick={closeCourseAccess} aria-label="Close course access"><X size={19} /></button>
+          <p className="section-kicker">Protected project</p>
+          <h2 id="course-dialog-title">Enter the course password.</h2>
+          <p>This portfolio gate limits casual access before continuing to the complete video on Google Drive.</p>
+          <form onSubmit={handleCourseAccess}>
+            <label htmlFor="course-password">Password</label>
+            <input id="course-password" type="password" value={coursePassword} onChange={(event) => { setCoursePassword(event.target.value); setCourseError('') }} autoComplete="off" aria-invalid={Boolean(courseError)} aria-describedby={courseError ? 'course-password-error' : undefined} autoFocus />
+            {courseError && <p className="course-dialog-error" id="course-password-error" role="alert">{courseError}</p>}
+            <button className="button button--accent" type="submit">Unlock video <ArrowUpRight size={16} /></button>
+          </form>
+        </div>
+      </dialog>
+    </main>
   )
 }
 
-function ContactSection() {
+function ContactFooter() {
   return (
-    <footer
-      id="contact"
-      className="relative overflow-hidden bg-[#e8702a] px-5 pb-8 pt-24 text-black sm:px-10 sm:pt-32 md:px-14"
-    >
-      <div className="footer-orbit absolute -right-[20vw] -top-[25vw] size-[70vw] min-h-[600px] min-w-[600px] rounded-full border border-black/15" />
-      <div className="footer-orbit absolute -right-[10vw] -top-[15vw] size-[50vw] min-h-[420px] min-w-[420px] rounded-full border border-black/15" />
-
-      <div className="relative mx-auto max-w-[1500px]">
-        <SectionReveal>
-          <p className="section-label text-black/55">05 · Contact</p>
-          <h2 className="mt-8 max-w-6xl text-[clamp(4rem,11vw,10rem)] font-medium leading-[0.82] tracking-[-0.075em]">
-            Bring your idea
-            <br />
-            <span className="font-playfair font-normal italic">to life.</span>
-          </h2>
-
-          <div className="mt-16 flex flex-col justify-between gap-10 border-t border-black/25 pt-8 sm:flex-row sm:items-end">
-            <div>
-              <p className="max-w-md text-sm leading-relaxed text-black/65">
-                Have a product challenge, a new idea or simply want to exchange
-                perspectives about design? Let&apos;s start a conversation.
-              </p>
-              <a
-                href="https://www.linkedin.com/in/anderson-loureiro/"
-                target="_blank"
-                rel="noreferrer"
-                className="group mt-7 inline-flex items-center gap-3 rounded-full bg-black px-7 py-3.5 text-sm font-semibold text-white transition-transform hover:scale-[1.03]"
-              >
-                Get in touch
-                <ArrowUpRight
-                  size={17}
-                  className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                />
-              </a>
-            </div>
-
-            <div className="flex gap-3">
-              <a
-                href="https://www.linkedin.com/in/anderson-loureiro/"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="LinkedIn"
-                className="grid size-12 place-items-center rounded-full border border-black/25 transition-colors hover:bg-black hover:text-white"
-              >
-                <Linkedin size={19} />
-              </a>
-              <a
-                href="https://www.behance.net/anderlou"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Behance"
-                className="grid size-12 place-items-center rounded-full border border-black/25 transition-colors hover:bg-black hover:text-white"
-              >
-                <ExternalLink size={19} />
-              </a>
-            </div>
+    <footer className="contact" id="contact">
+      <div className="contact-rings" aria-hidden="true" />
+      <div className="section-shell contact-inner">
+        <p className="section-kicker">05 · Contact</p>
+        <h2>Have a complex<br />product to <em>clarify?</em></h2>
+        <p className="contact-copy">Let’s talk about the product, the evidence and the next useful step.</p>
+        <a className="contact-button" href={whatsapp} target="_blank" rel="noreferrer">Message me on WhatsApp <MessageCircle size={22} /></a>
+        <div className="footer-meta">
+          <span>Anderson Loureiro · Senior Product Designer</span>
+          <div>
+            <a href="https://www.linkedin.com/in/anderson-loureiro/" target="_blank" rel="noreferrer" aria-label="LinkedIn"><Linkedin size={19} /></a>
+            <a href="https://www.behance.net/anderlou" target="_blank" rel="noreferrer" aria-label="Behance"><ExternalLink size={19} /></a>
           </div>
-        </SectionReveal>
-
-        <div className="mt-24 flex flex-col gap-3 border-t border-black/25 pt-6 text-xs font-medium uppercase tracking-[0.12em] text-black/55 sm:flex-row sm:items-center sm:justify-between">
-          <span>Anderson Loureiro · Product Designer</span>
           <span>Fortaleza, Brazil · 2026</span>
         </div>
       </div>
@@ -904,21 +699,56 @@ function ContactSection() {
   )
 }
 
-function App() {
+function CaseStudyPage({ data }: { data: CaseData }) {
+  useEffect(() => {
+    document.title = `${data.project.title} — Anderson Loureiro`
+    window.scrollTo(0, 0)
+  }, [data.project.title])
+
   return (
-    <main
-      className="min-h-screen bg-black tracking-[-0.02em]"
-      style={{ fontFamily: "'Inter', sans-serif" }}
-    >
-      <Navigation />
-      <PortfolioHero />
-      <AboutSection />
-      <WorkSection />
-      <ExpertiseSection />
-      <JourneySection />
-      <ContactSection />
+    <main className={`case-page case-page--${data.project.slug}`}>
+      <header className="case-nav">
+        <Brand />
+        <a className="case-back" href={`${base}#work`}><ArrowLeft size={17} /> Back to selected work</a>
+        <a className="header-contact" href={whatsapp} target="_blank" rel="noreferrer">WhatsApp <ArrowUpRight size={15} /></a>
+      </header>
+      <section className="case-hero">
+        <div className="case-hero-copy">
+          <p className="kicker">{data.project.number} · {data.project.eyebrow}</p>
+          <h1>{data.project.title}</h1><p>{data.intro}</p>{data.note && <small>{data.note}</small>}
+        </div>
+        <div className="case-meta">{data.meta.map(([label, value]) => <div key={label}><span>{label}</span><strong>{value}</strong></div>)}</div>
+      </section>
+      <div className="case-cover" style={{ backgroundColor: data.project.color }}><img src={data.project.cover} alt={`${data.project.title} project overview`} /></div>
+      <section className="case-proof">{data.proof.map(([value, label]) => <div key={label}><strong>{value}</strong><span>{label}</span></div>)}</section>
+      <div className="case-body">
+        {data.sections.map((section, index) => (
+          <section className="case-section" key={section.title}>
+            <div className="case-section-copy">
+              <p className="section-kicker">{section.eyebrow}</p><h2>{section.title}</h2>
+              {section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+              {section.bullets && <ul>{section.bullets.map((item) => <li key={item}><span>{String(index + 1).padStart(2, '0')}</span>{item}</li>)}</ul>}
+            </div>
+            {section.image && <figure className="case-image"><img src={section.image} alt={section.imageAlt} loading="lazy" /></figure>}
+          </section>
+        ))}
+      </div>
+      <section className="case-next">
+        <p className="section-kicker">Continue exploring</p><h2>See the source,<br />then let’s <em>talk.</em></h2>
+        <div>
+          <a className="button button--dark" href={data.sourceHref} target="_blank" rel="noreferrer">{data.sourceLabel} <ArrowUpRight size={17} /></a>
+          <a className="button button--outline" href={whatsapp} target="_blank" rel="noreferrer">Message on WhatsApp <MessageCircle size={17} /></a>
+        </div>
+      </section>
+      <footer className="case-footer"><span>Anderson Loureiro · Product Designer</span><a href={`${base}#work`}>All selected work</a></footer>
     </main>
   )
+}
+
+function App() {
+  const slug = new URLSearchParams(window.location.search).get('project')
+  const caseData = slug ? cases[slug] : undefined
+  return caseData ? <CaseStudyPage data={caseData} /> : <HomePage />
 }
 
 export default App
