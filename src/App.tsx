@@ -397,15 +397,13 @@ function HomePage() {
     hero.style.setProperty('--tilt-y', `${offsetX * 3.6}deg`)
     hero.style.setProperty('--shift-x', `${offsetX * 8}px`)
     hero.style.setProperty('--shift-y', `${offsetY * 7}px`)
-    hero.style.setProperty('--black-hole-x', `${offsetX * -28}px`)
-    hero.style.setProperty('--black-hole-y', `${offsetY * -20}px`)
   }
 
   const resetHeroInteraction = () => {
     const hero = heroRef.current
     if (!hero) return
 
-    for (const property of ['--tilt-x', '--tilt-y', '--shift-x', '--shift-y', '--black-hole-x', '--black-hole-y']) {
+    for (const property of ['--tilt-x', '--tilt-y', '--shift-x', '--shift-y']) {
       hero.style.removeProperty(property)
     }
   }
@@ -456,9 +454,9 @@ function HomePage() {
         </div>
         <div className="hero-portrait-wrap">
           <div className="portrait-stage">
-            <figure className="hero-portrait">
-              <img src={`${base}images/anderson-profile.webp`} alt="3D portrait of Anderson Loureiro with round glasses and a beard" width="872" height="872" />
-              <figcaption><span>Currently</span><strong>Performa IT · Pague Menos</strong></figcaption>
+            <figure className="hero-portrait" tabIndex={0} aria-label="Anderson Loureiro, Product Designer Senior">
+              <img src={`${base}images/anderson-avatar.png`} alt="3D portrait of Anderson Loureiro with round glasses and a beard" width="6262" height="6262" />
+              <figcaption><strong>Product Designer Senior</strong><span>Performa IT · Pague Menos</span></figcaption>
             </figure>
             <div className="portrait-facts" aria-hidden="true">
               <div className="portrait-fact-orbit">
@@ -471,7 +469,7 @@ function HomePage() {
               </div>
             </div>
           </div>
-          <div className="hero-interaction-hint" aria-hidden="true"><span /> Move to navigate · Hover portrait</div>
+          <div className="hero-interaction-hint" aria-hidden="true"><span /> Scroll to explore · Hover portrait</div>
         </div>
         <div className="hero-index" aria-hidden="true">01 — 26</div>
       </section>

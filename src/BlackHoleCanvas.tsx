@@ -51,7 +51,8 @@ export default function BlackHoleCanvas() {
     const hero = container?.closest('.hero')
     if (!container || !(hero instanceof HTMLElement)) return
 
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)')
+    let reducedMotion = motionPreference.matches
     let renderer: THREE.WebGLRenderer
 
     try {
@@ -162,7 +163,7 @@ export default function BlackHoleCanvas() {
     orbitPoints.frustumCulled = false
     spaceScene.add(orbitPoints)
 
-    const starCount = window.innerWidth < 820 ? 7000 : 18000
+    const starCount = window.innerWidth < 820 ? 9000 : 22000
     const starGeometry = new THREE.BufferGeometry()
     const starPositions = new Float32Array(starCount * 3)
     const starSizes = new Float32Array(starCount)
@@ -177,7 +178,7 @@ export default function BlackHoleCanvas() {
       starPositions[offset] = Math.cos(azimuth) * Math.sin(polar) * radius
       starPositions[offset + 1] = Math.sin(azimuth) * Math.sin(polar) * radius
       starPositions[offset + 2] = Math.cos(polar) * radius
-      starSizes[index] = 0.85 + Math.pow(Math.random(), 4) * 1.8
+      starSizes[index] = 1.1 + Math.pow(Math.random(), 4) * 2.2
       const color = starPalette[Math.floor(Math.random() * starPalette.length)]
       starColors[offset] = color.r
       starColors[offset + 1] = color.g
@@ -232,15 +233,18 @@ export default function BlackHoleCanvas() {
     const blackHolePosition = new THREE.Vector3(0, 0, 0)
     const cameraTarget = new THREE.Vector3()
     const projectedPosition = new THREE.Vector3()
-    const pointerTarget = new THREE.Vector2()
-    const pointerCurrent = new THREE.Vector2()
     const baseCameraPosition = new THREE.Vector3(5, 2, 5)
+    const cameraOrbitAxis = new THREE.Vector3(0, 1, 0)
     let animationFrame = 0
     let isVisible = true
-    const startTime = performance.now()
-    let previousFrameTime = startTime
+    let scrollTarget = 0
+    let scrollCurrent = 0
+    let scrollDirty = true
+    let sceneTime = 0
+    let previousFrameTime = performance.now()
 
     const resize = () => {
+      scrollDirty = true
       const bounds = container.getBoundingClientRect()
       const width = Math.max(1, Math.floor(bounds.width))
       const height = Math.max(1, Math.floor(bounds.height))
@@ -258,32 +262,33 @@ export default function BlackHoleCanvas() {
       starMaterial.uniforms.uPixelRatio.value = pixelRatio * 1.3
     }
 
-    const handlePointerMove = (event: PointerEvent) => {
-      if (event.pointerType === 'touch' || reducedMotion) return
-      const bounds = hero.getBoundingClientRect()
-      pointerTarget.set(
-        ((event.clientX - bounds.left) / bounds.width - 0.5) * 2,
-        ((event.clientY - bounds.top) / bounds.height - 0.5) * 2,
-      )
+    const handleScroll = () => {
+      // Observe native scrolling without consuming wheel or touch input.
+      scrollDirty = true
     }
-
-    const resetPointer = () => pointerTarget.set(0, 0)
 
     const render = () => {
       const now = performance.now()
-      const elapsed = (now - startTime) / 1000
       const delta = Math.min((now - previousFrameTime) / 1000, 0.05)
       previousFrameTime = now
-      pointerCurrent.lerp(pointerTarget, 1 - Math.exp(-3.2 * delta))
-      camera.position.set(
-        baseCameraPosition.x + pointerCurrent.x * 0.28,
-        baseCameraPosition.y - pointerCurrent.y * 0.18,
-        baseCameraPosition.z - pointerCurrent.x * 0.1,
-      )
-      // Pan the camera's aim as well as its angle. Both render passes share
-      // this camera, so the lens stays attached to the moving black hole.
-      cameraTarget.set(pointerCurrent.x * 0.24, -pointerCurrent.y * 0.16, -pointerCurrent.x * 0.24)
+      if (!reducedMotion) sceneTime += delta
+      const elapsed = sceneTime
+      if (scrollDirty) {
+        const bounds = hero.getBoundingClientRect()
+        scrollTarget = reducedMotion ? 0 : THREE.MathUtils.clamp(-bounds.top / Math.max(1, bounds.height * 0.85), 0, 1)
+        scrollDirty = false
+      }
+      scrollCurrent = reducedMotion ? 0 : THREE.MathUtils.lerp(scrollCurrent, scrollTarget, 1 - Math.exp(-4 * delta))
+      const travel = THREE.MathUtils.smoothstep(scrollCurrent, 0, 1)
+      // A reversible scroll-driven dolly, rising orbit and restrained camera roll.
+      // The scene and lens pass share the camera to keep the distortion aligned.
+      camera.position.copy(baseCameraPosition)
+      camera.position.y += travel * 0.9
+      camera.position.applyAxisAngle(cameraOrbitAxis, travel * 0.18)
+      camera.position.multiplyScalar(1 - travel * 0.22)
+      cameraTarget.set(0, travel * 0.1, 0)
       camera.lookAt(cameraTarget)
+      camera.rotation.z -= travel * 0.025
       camera.updateMatrixWorld()
       distortionPlane.lookAt(camera.position)
 
@@ -295,6 +300,8 @@ export default function BlackHoleCanvas() {
       const orbitTime = elapsed * 0.12
       discMaterial.uniforms.uTime.value = orbitTime
       orbitMaterial.uniforms.uTime.value = orbitTime + 9999
+      stars.rotation.y = elapsed * 0.003
+      stars.rotation.x = elapsed * 0.0006
 
       renderer.setRenderTarget(spaceTarget)
       renderer.clear()
@@ -308,7 +315,10 @@ export default function BlackHoleCanvas() {
       if (!reducedMotion && isVisible) animationFrame = window.requestAnimationFrame(render)
     }
 
-    const resizeObserver = new ResizeObserver(resize)
+    const resizeObserver = new ResizeObserver(() => {
+      resize()
+      if (reducedMotion) render()
+    })
     resizeObserver.observe(container)
     const visibilityObserver = new IntersectionObserver(([entry]) => {
       const wasVisible = isVisible
@@ -317,8 +327,15 @@ export default function BlackHoleCanvas() {
       if (!isVisible) window.cancelAnimationFrame(animationFrame)
     }, { threshold: 0.01 })
     visibilityObserver.observe(hero)
-    hero.addEventListener('pointermove', handlePointerMove)
-    hero.addEventListener('pointerleave', resetPointer)
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    const handleMotionPreference = () => {
+      reducedMotion = motionPreference.matches
+      scrollDirty = true
+      scrollCurrent = 0
+      window.cancelAnimationFrame(animationFrame)
+      render()
+    }
+    motionPreference.addEventListener('change', handleMotionPreference)
     resize()
     render()
 
@@ -326,8 +343,8 @@ export default function BlackHoleCanvas() {
       window.cancelAnimationFrame(animationFrame)
       resizeObserver.disconnect()
       visibilityObserver.disconnect()
-      hero.removeEventListener('pointermove', handlePointerMove)
-      hero.removeEventListener('pointerleave', resetPointer)
+      window.removeEventListener('scroll', handleScroll)
+      motionPreference.removeEventListener('change', handleMotionPreference)
       discGeometry.dispose()
       discMaterial.dispose()
       orbitGeometry.dispose()
