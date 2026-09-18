@@ -11,7 +11,9 @@ import {
   MessageCircle,
   X,
 } from 'lucide-react'
-import { type FormEvent, type PointerEvent as ReactPointerEvent, useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, type FormEvent, type PointerEvent as ReactPointerEvent, useEffect, useRef, useState } from 'react'
+
+const BlackHoleCanvas = lazy(() => import('./BlackHoleCanvas'))
 
 const base = import.meta.env.BASE_URL
 const whatsapp =
@@ -391,26 +393,19 @@ function HomePage() {
     const offsetX = x - 0.5
     const offsetY = y - 0.5
 
-    hero.style.setProperty('--tilt-x', `${(0.5 - y) * 5}deg`)
-    hero.style.setProperty('--tilt-y', `${offsetX * 6}deg`)
-    hero.style.setProperty('--shift-x', `${offsetX * 12}px`)
-    hero.style.setProperty('--shift-y', `${offsetY * 10}px`)
-    hero.style.setProperty('--orbit-x', `${(0.5 - x) * 18}px`)
-    hero.style.setProperty('--orbit-y', `${(0.5 - y) * 18}px`)
-    hero.style.setProperty('--universe-x', `${offsetX * -32}px`)
-    hero.style.setProperty('--universe-y', `${offsetY * -22}px`)
-    hero.style.setProperty('--universe-rotate', `${offsetX * 3.2}deg`)
-    hero.style.setProperty('--plane-x', `${offsetX * 24}px`)
-    hero.style.setProperty('--plane-y', `${offsetY * 16}px`)
-    hero.style.setProperty('--route-x', `${offsetX * 18}px`)
-    hero.style.setProperty('--route-y', `${offsetY * 12}px`)
+    hero.style.setProperty('--tilt-x', `${(0.5 - y) * 2.8}deg`)
+    hero.style.setProperty('--tilt-y', `${offsetX * 3.6}deg`)
+    hero.style.setProperty('--shift-x', `${offsetX * 8}px`)
+    hero.style.setProperty('--shift-y', `${offsetY * 7}px`)
+    hero.style.setProperty('--black-hole-x', `${offsetX * -28}px`)
+    hero.style.setProperty('--black-hole-y', `${offsetY * -20}px`)
   }
 
   const resetHeroInteraction = () => {
     const hero = heroRef.current
     if (!hero) return
 
-    for (const property of ['--tilt-x', '--tilt-y', '--shift-x', '--shift-y', '--orbit-x', '--orbit-y', '--universe-x', '--universe-y', '--universe-rotate', '--plane-x', '--plane-y', '--route-x', '--route-y']) {
+    for (const property of ['--tilt-x', '--tilt-y', '--shift-x', '--shift-y', '--black-hole-x', '--black-hole-y']) {
       hero.style.removeProperty(property)
     }
   }
@@ -447,27 +442,9 @@ function HomePage() {
       <Navigation />
       <section ref={heroRef} className="hero" onPointerMove={handleHeroPointerMove} onPointerLeave={resetHeroInteraction}>
         <div className="hero-universe" aria-hidden="true">
-          <div className="universe-horizon universe-horizon--outer" />
-          <div className="universe-horizon universe-horizon--inner" />
-          <div className="universe-eclipse"><div /></div>
-          <svg className="universe-routes" viewBox="0 0 1600 900" preserveAspectRatio="none">
-            <defs>
-              <linearGradient id="route-glow" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0" stopColor="#ff9b69" stopOpacity="0" />
-                <stop offset="0.48" stopColor="#ff9b69" stopOpacity="0.72" />
-                <stop offset="1" stopColor="#ff745d" stopOpacity="0" />
-              </linearGradient>
-            </defs>
-            <path d="M-140 718C211 370 496 822 824 500C1115 214 1362 118 1740 326" />
-            <path d="M198-110C536 203 483 515 822 687C1149 852 1397 753 1702 472" />
-          </svg>
-          <div className="universe-plane" />
-          <div className="universe-map-label universe-map-label--one"><span>Sector 01</span>Commerce</div>
-          <div className="universe-map-label universe-map-label--two"><span>Sector 02</span>ERP systems</div>
-          <div className="universe-map-label universe-map-label--three"><span>Sector 03</span>Fintech · Health · Education</div>
-          <div className="universe-axis"><span>Explored product universes</span></div>
+          <div className="black-hole-field" />
+          <Suspense fallback={null}><BlackHoleCanvas /></Suspense>
         </div>
-        <div className="hero-grain" aria-hidden="true" />
         <div className="hero-copy">
           <p className="kicker">Senior UX/UI & Product Designer · Fortaleza, Brazil</p>
           <h1>Turning complex products into <em>clear decisions.</em></h1>
@@ -478,8 +455,6 @@ function HomePage() {
           </div>
         </div>
         <div className="hero-portrait-wrap">
-          <div className="portrait-orbit portrait-orbit--one" aria-hidden="true" />
-          <div className="portrait-orbit portrait-orbit--two" aria-hidden="true" />
           <div className="portrait-stage">
             <figure className="hero-portrait">
               <img src={`${base}images/anderson-profile.webp`} alt="3D portrait of Anderson Loureiro with round glasses and a beard" width="872" height="872" />
